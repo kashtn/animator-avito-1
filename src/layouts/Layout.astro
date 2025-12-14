@@ -4,23 +4,96 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description?: string;
+  keywords?: string;
+  ogImage?: string;
+  ogType?: string;
+  canonicalUrl?: string;
 }
 
 const {
   title,
   description = "Заказать аниматоров на детский праздник - профессиональные ведущие и персонажи",
+  keywords = "аниматоры на праздник, заказать аниматора, детский аниматор, ведущий на день рождения, персонажи для детей, детский праздник, аниматор на дом",
+  ogImage = "/og-image.jpg",
+  ogType = "website",
+  canonicalUrl = Astro.url.href,
 } = Astro.props;
+
+const siteUrl = Astro.site || "https://animator-avito-1.netlify.app/";
+const fullOgImage = ogImage.startsWith("http")
+  ? ogImage
+  : `${siteUrl}${ogImage}`;
 ---
 
 <!doctype html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
     <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="Аниматоры на праздник" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Russian" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullOgImage} />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Аниматоры на праздник" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        name: "Аниматоры на праздник",
+        description: description,
+        url: siteUrl,
+        telephone: "+7 (999) 123-45-67",
+        email: "hello@animators.ru",
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "RU",
+        },
+        serviceArea: {
+          "@type": "City",
+          name: "Москва",
+        },
+        priceRange: "$$",
+        image: fullOgImage,
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: "4.9",
+          reviewCount: "127",
+        },
+        offers: {
+          "@type": "Offer",
+          description: "Услуги аниматоров на детские праздники",
+          category: "Развлечения для детей",
+        },
+      })}
+    />
   </head>
   <body>
     <slot />
